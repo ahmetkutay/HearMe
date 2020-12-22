@@ -1,6 +1,5 @@
 import React from 'react';
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -10,6 +9,8 @@ import SearchScreen from '../screen/searchScreen';
 import ProfileScreen from '../screen/profileScreen';
 import SettingScreen from '../screen/settingScreen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { createStackNavigator } from '@react-navigation/stack';
+const Stack = createStackNavigator();
 const avatar = require('../assets/maxresdefault.jpg');
 
 
@@ -49,13 +50,16 @@ function Home() {
 
 export default function AppContainer(props) {
     return (
-        <NavigationContainer>
-
-            <Drawer.Navigator initialRouteName="Home">
-                <Drawer.Screen name="Home" component={Home} />
-                <Drawer.Screen name="Setting" component={SettingScreen} />
-            </Drawer.Navigator>
-        </NavigationContainer>
+        // <NavigationContainer> 
+        //     <Drawer.Navigator initialRouteName="Home">
+        //         <Drawer.Screen name="Home" component={Home} />
+        //         <Drawer.Screen name="Setting" component={SettingScreen} />
+        //     </Drawer.Navigator>
+        // </NavigationContainer>
+        <Drawer.Navigator initialRouteName="Home">
+                 <Drawer.Screen name="Home" component={Home} />
+                 <Drawer.Screen name="Setting" component={SettingScreen} />
+        </Drawer.Navigator>
 
     );
 }
