@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  AsyncStorage,
   View,
   Alert
 } from 'react-native';
 import User from "../components/User"
+import AsyncStorage from '@react-native-community/async-storage'
 import * as firebase from 'firebase';
 
 
@@ -30,8 +30,8 @@ export default class AuthLoadingScreen extends React.Component {
   }
 
   _bootstrapAsync = async () => {
-    //User.Email = await AsyncStorage.getItem('userEmail');   //sıkıntı
-    //this.props.navigation.navigate(User.Email ? 'App' : 'Auth');
+    // User.Email = await AsyncStorage.getItem('userEmail'); 
+    // this.props.navigation.navigate(User.Email ? 'Home' : 'Login');//sıkıntı
     this.props.navigation.navigate('Login');
   };
 

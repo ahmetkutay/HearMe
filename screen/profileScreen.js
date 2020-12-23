@@ -4,6 +4,7 @@ import 'react-native-gesture-handler';
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import { SafeAreaView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import User from '../components/User';
 const avatar = require('../assets/maxresdefault.jpg');
 
 export default class ProfileScreen extends React.Component {
@@ -21,7 +22,7 @@ export default class ProfileScreen extends React.Component {
                             <Image source={avatar} style={styles.image} resizeMode="center" ></Image>
                         </View>
                         <View>
-                            <Text style={{ alignSelf: "center" }}>Ters Giden Bisiklet</Text>
+                            <Text style={{ alignSelf: "center" }}>{User.Username}</Text>
                         </View>
 
                         <Button

@@ -1,6 +1,7 @@
-import React, { Component } from "react"
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, Alert, AsyncStorage } from "react-native"
+import React, { Component } from "react";
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Alert } from "react-native";
 import * as firebase from 'firebase';
+import AsyncStorage from '@react-native-community/async-storage';
 import User from "../components/User";
 
 class Login extends Component {
