@@ -11,7 +11,7 @@ import SettingScreen from '../screen/settingScreen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createStackNavigator } from '@react-navigation/stack';
 const Stack = createStackNavigator();
-const avatar = require('../assets/maxresdefault.jpg');
+// const avatar = require('../assets/maxresdefault.jpg');
 
 
 const Tab = createMaterialBottomTabNavigator();

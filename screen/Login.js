@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import * as firebase from 'firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 import User from "../components/User";
-const avatar = require('../assets/girisekrean.jpg');
+const avatar = require('../assets/mobile_login.png');
 
 class Login extends Component {
     constructor(props) {
@@ -46,8 +46,8 @@ class Login extends Component {
     }
     render() {
         return (
-            <SafeAreaView>
-                <ScrollView>
+            <SafeAreaView style={{ backgroundColor: 'white' }}>
+                <ScrollView  >
                     <View style={{ height: StatusBar.currentHeight }} />
                     <View style={{ height: StatusBar.currentHeight }} />
                     <View style={{ height: StatusBar.currentHeight }} />
@@ -57,45 +57,53 @@ class Login extends Component {
 
                     <View style={{ alignSelf: 'center' }}>
                         <View style={styles.profilImage}>
-                            <Image source={avatar} style={styles.image} resizeMode="center" ></Image>
+                            <Image source={avatar} style={styles.image} resizeMode="cover" ></Image>
                         </View>
-                        <Text style={{ alignSelf: "center", height: 30 }}> Welcome To HearMe App </Text>
+                        <View style={{ height: StatusBar.currentHeight }} />
+                        <Text style={{ alignSelf: "center", height: 30, fontSize: 14 }}> Welcome To HearMe App </Text>
                     </View>
+                    <View style={{ height: StatusBar.currentHeight }} />
                     <View>
-                        <View >
+                        <View style={styles.inputView}>
 
-                            <TextInput style={styles.textinputstyle} placeholder=" Emailinizi Yazınız" value={this.state.Email} onChangeText={this.valchange("Email")} />
+                            <TextInput style={styles.inputText} placeholder=" Emailinizi Yazınız" value={this.state.Email} onChangeText={this.valchange("Email")} />
                         </View>
-                        <View style={{ height: 10 }} />
+                        <View style={{ height: 5 }} />
 
                         {this.state.issign &&
-                            <View >
-                                <TextInput style={styles.textinputstyle} placeholder=" Kullanıcı Adınızı Yazınız" value={this.state.Username}
+                            <View style={styles.inputView}>
+                                <TextInput style={styles.inputText} placeholder=" Kullanıcı Adınızı Yazınız" value={this.state.Username}
                                     onChangeText={this.valchange("Username")} />
                             </View>
                         }
-                        <View style={{ height: 10 }} />
+                        <View style={{ height: 5 }} />
 
-                        <View >
-                            <TextInput style={styles.textinputstyle} placeholder=" Şifrenizi Yazınız" value={this.state.Password} onChangeText={this.valchange("Password")} />
+                        <View style={styles.inputView}>
+                            <TextInput style={styles.inputText} placeholder=" Şifrenizi Yazınız" value={this.state.Password} onChangeText={this.valchange("Password")} />
                         </View>
-                        <View style={{ height: 10 }} />
+                        <View style={{ height: 5 }} />
 
                         {!this.state.issign &&
                             <View style={{ alignItems: "center", width: 100 + "%" }}>
                                 <TouchableOpacity style={styles.loginbutton} onPress={() => this.login(this.state.Email, this.state.Password)}>
-                                    <Text style={styles.buttontext}>Login</Text>
+                                    <Text style={styles.loginButtonText}>Login</Text>
                                 </TouchableOpacity>
                             </View>
                         }
-                        <View style={{ height: 10 }} />
+                        <View style={{ height: 5 }} />
 
                         <View style={{ alignItems: "center", width: 100 + "%" }}>
                             <TouchableOpacity style={styles.signupbutton} onPress={() => this.signup(this.state.issign, this.state.Email, this.state.Password, this.state.Username)}>
-                                <Text style={styles.buttontext}>Signup</Text>
+                                <Text style={styles.signupButtonText}>Signup</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
+                    <View style={{ height: StatusBar.currentHeight }} />
+                    <View style={{ height: StatusBar.currentHeight }} />
+                    <View style={{ height: StatusBar.currentHeight }} />
+                    <View style={{ height: StatusBar.currentHeight }} />
+                    <View style={{ height: StatusBar.currentHeight }} />
+                    <View style={{ height: StatusBar.currentHeight }} />
                 </ScrollView>
             </SafeAreaView>
 
@@ -104,11 +112,41 @@ class Login extends Component {
 }
 
 const styles = StyleSheet.create({
-    buttontext: { color: "white", fontSize: 34 },
-    loginbutton: { backgroundColor: "orange", borderRadius: 20, width: 100 + "%", alignItems: "center" },
-    signupbutton: { backgroundColor: "gold", borderRadius: 20, width: 100 + "%", alignItems: "center" },
-    textstyle: { color: "black", fontSize: 24, },
-    textinputstyle: { borderRadius: 15, borderColor: "white", color: "black", borderWidth: 1, height: 50, fontSize: 24, alignItems: "center" },
+    loginButtonText: { color: "white", fontSize: 15 },
+    signupButtonText: { color: "#465882", fontSize: 15 },
+    loginbutton: {
+        width: "80%",
+        backgroundColor: "#465882",
+        borderRadius: 25,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 40,
+        marginBottom: 10
+    },
+    signupbutton: {
+        width: "80%",
+        borderRadius: 25,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 10
+    },
+    inputView: {
+        alignSelf: "center",
+        width: "80%",
+        borderRadius: 25,
+        borderColor: "#465882",
+        borderWidth: 1,
+        height: 60,
+        marginBottom: 10,
+        justifyContent: "center",
+        padding: 10
+    },
+    inputText: {
+        height: 50,
+        color: "#465882",
+    },
     image: {
         flex: 1,
         width: undefined,
@@ -117,7 +155,7 @@ const styles = StyleSheet.create({
     profilImage: {
         width: 250,
         height: 150,
-        borderRadius: 100,
+        borderRadius: 25,
         overflow: "hidden"
     }
 });
