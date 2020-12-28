@@ -1,10 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, StatusBar, FlatList } from 'react-native';
 import 'react-native-gesture-handler';
-import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import { SafeAreaView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import User from '../components/User';
+import { Appbar } from 'react-native-paper';
+import { Card } from 'react-native-elements';
 
 const DATA = [
     {
@@ -59,30 +60,32 @@ const Item = ({ title }) => (
 );
 
 const renderItem = ({ item }) => (
-    <Item title={item.title} />
+    <Card>
+        <Text style={styles.cardTitleStyle}>
+            {item.title}
+        </Text>
+    </Card>
 );
 
 export default class ProfileScreen extends React.Component {
     render() {
         return (
             <SafeAreaView>
+                <Appbar style={styles.appBar}>
+                    <Appbar.Content title="Profil Sayfasi" />
+                </Appbar>
+                <View style={{ height: StatusBar.currentHeight }} />
+                <View style={{ height: StatusBar.currentHeight }} />
+                <View style={{ height: StatusBar.currentHeight }} />
+
                 <ScrollView>
-                    <View style={{ height: 20 }} />
-
-                    <View>
-                        <Text style={styles.titleBar}>
-                            Profil Sayfasi
-                        </Text>
-                    </View>
-                    <View style={{ height: 20 }} />
-
                     <View style={{ alignSelf: 'center' }}>
                         <View>
                             <Text style={{ alignSelf: "center" }}>{User.Username}</Text>
                         </View>
                     </View>
                     <View style={{ height: 20 }} />
-                    <View style={{alignSelf:'center'}}><Text>Hikayelerim</Text></View>
+                    <View style={{ alignSelf: 'center' }}><Text>Hikayelerim</Text></View>
                     <View style={{ height: 20 }} />
 
                 </ScrollView>
@@ -103,6 +106,18 @@ export default class ProfileScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    appBar: {
+        backgroundColor: "#465882",
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: StatusBar.currentHeight,
+    },
+    cardTitleStyle: {
+        fontSize: 15,
+        fontWeight: '700',
+        textAlign: 'justify'
+    },
     profilImage: {
         width: 250,
         height: 200,
@@ -123,7 +138,6 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        marginTop: StatusBar.currentHeight || 0,
     },
     item: {
         backgroundColor: '#f9c2ff',

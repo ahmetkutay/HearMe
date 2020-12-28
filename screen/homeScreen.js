@@ -5,8 +5,7 @@ import 'react-native-gesture-handler';
 import * as firebase from 'firebase';
 import User from "../components/User";
 import { ScrollView } from 'react-native-gesture-handler';
-import { Button } from 'react-native';
-
+import { Card } from 'react-native-elements';
 
 const DATA = [
     {
@@ -54,14 +53,12 @@ const DATA = [
 
 ];
 
-const Item = ({ title }) => (
-    <View style={styles.item}>
-        <Text style={styles.title}>{title}</Text>
-    </View>
-);
-
 const renderItem = ({ item }) => (
-    <Item title={item.title} />
+    <Card>
+        <Text style={styles.cardTitleStyle}>
+            {item.title}
+        </Text>
+    </Card>
 );
 
 
@@ -84,13 +81,14 @@ export default class HomeScreen extends React.Component {
     render() {
         return (
             <SafeAreaView>
-                <ScrollView style={{height:150}}>
+                <View style={{ height: StatusBar.currentHeight }} />
+                <ScrollView style={{ height: 150 }}>
                     <View>
                         <View style={{ height: 20 }} />
                         <View style={{ alignItems: "center", width: 100 + "%", }}>
                             <TextInput placeholder="Hikayenizi Yazınız" style={styles.inputStyle} value={this.state.Story} ref={input => { this.textInput = input }} onChangeText={this.valchange("Story")} />
                             <TouchableOpacity style={styles.buttonStyle} onPress={() => this.sendstory()}>
-                                <Button title="Send Story" />
+                                <Text style={styles.buttonTextStyle}>Send Story</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -105,39 +103,42 @@ export default class HomeScreen extends React.Component {
 
                         />
                     </SafeAreaView>
-
                 </ScrollView>
             </SafeAreaView>
-
-
         );
     }
 }
 
 const styles = StyleSheet.create({
+    cardTitleStyle: {
+        fontSize: 15,
+        fontWeight: '700',
+        textAlign: 'justify'
+
+    },
     buttonStyle: {
-        width: 100,
-        borderRadius: 150
+        width: "40%",
+        backgroundColor: "#465882",
+        borderRadius: 25,
+        height: 40,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    buttonTextStyle: {
+        color: "white"
     },
     inputStyle: {
-        margin: 15,
-        height: 40,
-        width: 360,
-        borderColor: '#7a42f4',
+        alignSelf: "center",
+        width: "80%",
+        borderRadius: 25,
+        borderColor: "#465882",
         borderWidth: 1,
-        paddingLeft: 6
+        height: 60,
+        marginBottom: 10,
+        justifyContent: "center",
+        padding: 10
     },
     container: {
         flex: 1,
-        marginTop: StatusBar.currentHeight || 0,
-    },
-    item: {
-        backgroundColor: '#f9c2ff',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-    },
-    title: {
-        fontSize: 32,
     },
 });

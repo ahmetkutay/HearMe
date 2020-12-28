@@ -57,8 +57,8 @@ export default function AppContainer(props) {
         //     </Drawer.Navigator>
         // </NavigationContainer>
         <Drawer.Navigator initialRouteName="Home">
-                 <Drawer.Screen name="Home" component={Home} />
-                 <Drawer.Screen name="Setting" component={SettingScreen} />
+            <Drawer.Screen name="Home" component={Home} />
+            <Drawer.Screen name="Setting" component={SettingScreen} />
         </Drawer.Navigator>
 
     );

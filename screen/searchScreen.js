@@ -4,6 +4,7 @@ import 'react-native-gesture-handler';
 import { SearchBar } from 'react-native-elements';
 import { SafeAreaView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Card } from 'react-native-elements';
 
 
 const DATA = [
@@ -52,14 +53,12 @@ const DATA = [
 
 ];
 
-const Item = ({ title }) => (
-    <View style={styles.item}>
-        <Text style={styles.title}>{title}</Text>
-    </View>
-);
-
 const renderItem = ({ item }) => (
-    <Item title={item.title} />
+    <Card>
+        <Text style={styles.cardTitleStyle}>
+            {item.title}
+        </Text>
+    </Card>
 );
 
 export default class SearchScreen extends React.Component {
@@ -102,20 +101,18 @@ export default class SearchScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    cardTitleStyle: {
+        fontSize: 15,
+        fontWeight: '700',
+        textAlign: 'justify'
+
+    },
     searchStyle: {
         flex: 1,
-        borderColor: '#cccccc',
-        borderWidth: 0.5,
         borderRadius: 15,
     },
     container: {
         flex: 1,
-        marginTop: StatusBar.currentHeight || 0,
     },
-    item: {
-        backgroundColor: '#f9c2ff',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-    },
+
 });
