@@ -73,9 +73,14 @@ export default class HomeScreen extends React.Component {
     valchange = key => val => {
         this.setState({ [key]: val })
     }
-    sendstory() {
-        //usernamele kaydolunmıcak
-        firebase.database().ref("Stories/" + User.Username).set({ Username: User.Username, Story: this.state.Story, Like: 0 })
+    async sendstory() {
+        var storyid;
+        await firebase.database().ref('Total Stories/').once("value", function (snapshot) {
+            storyid = parseInt(snapshot.val(), 10);
+        });
+        storyid++;
+        firebase.database().ref("Stories/" + storyid).set({ Username: User.Username, Story: this.state.Story, Like: 0 })
+        firebase.database().ref('Total Stories/').set(storyid);
         this.textInput.clear();
     }
     render() {
