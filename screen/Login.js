@@ -27,7 +27,6 @@ class Login extends Component {
         });
         User.Email = email;
         User.Password = password;
-        AsyncStorage.setItem("userEmail", email);
         this.props.navigation.navigate("Home");
     }
 
@@ -48,7 +47,8 @@ class Login extends Component {
                 userid = parseInt(snapshot.val(),10);
             });
             userid++;
-            firebase.database().ref("Users/" + userid).set({ Username: this.state.Username, Email: this.state.Email, Password: this.state.Password, TotalLikes: 0, TotalStories: 0 });
+            firebase.database().ref("Users/" + userid).set({ Username: this.state.Username, Email: this.state.Email, Password: this.state.Password, TotalLikes: 0, TotalStories: 0,Id:userid });
+            User.Id=userid;
             firebase.database().ref('Total Users/').set(userid);
             this.props.navigation.navigate("Home");
         }

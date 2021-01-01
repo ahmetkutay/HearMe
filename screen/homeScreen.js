@@ -70,6 +70,21 @@ export default class HomeScreen extends React.Component {
             textInput: ""
         }
     }
+    componentDidMount() {     
+        if(User.Id)
+            return;
+        const rootRef = firebase.database().ref();
+        const oneRef = rootRef.child('Users').orderByChild('Email');
+        oneRef.equalTo(User.Email)
+            .once('value', snapshot => {
+                const text=snapshot.toJSON()[1];
+                User.Username=text["Username"];
+                User.Id=text["Id"];
+                User.TotalLikes=text["TotalLikes"];
+                User.TotalStories=text["TotalStories"];                
+            })            
+    }
+
     valchange = key => val => {
         this.setState({ [key]: val })
     }
@@ -79,10 +94,12 @@ export default class HomeScreen extends React.Component {
             storyid = parseInt(snapshot.val(), 10);
         });
         storyid++;
-        firebase.database().ref("Stories/" + storyid).set({ Username: User.Username, Story: this.state.Story, Like: 0 })
+        firebase.database().ref("Stories/" + storyid).set({ Username: User.Username, Story: this.state.Story, Like: 0, UserId: User.Id })
+        firebase.database().ref("Users/" + userid + "/Stories").set(storyid);
         firebase.database().ref('Total Stories/').set(storyid);
         this.textInput.clear();
     }
+
     render() {
         return (
             <SafeAreaView>

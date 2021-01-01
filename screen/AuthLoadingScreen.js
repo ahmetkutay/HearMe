@@ -11,7 +11,7 @@ import * as firebase from 'firebase';
 export default class AuthLoadingScreen extends React.Component {
   constructor(props) {
     super(props);
-    this._bootstrapAsync();
+    this._Navigate();
     var config ={
         apiKey: "AIzaSyAnTrvUS1v__v50nK6t_vNz-JQsbUPOHpw",
         authDomain: "hearme-264ff.firebaseapp.com",
@@ -29,9 +29,7 @@ export default class AuthLoadingScreen extends React.Component {
      }
   }
 
-  _bootstrapAsync = async () => {
-    // User.Email = await AsyncStorage.getItem('userEmail'); 
-    // this.props.navigation.navigate(User.Email ? 'Home' : 'Login');//sıkıntı
+  _Navigate(){
     this.props.navigation.navigate('Login');
   };
 
