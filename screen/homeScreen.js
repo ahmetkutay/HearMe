@@ -7,82 +7,54 @@ import User from "../components/User";
 import { ScrollView } from 'react-native-gesture-handler';
 import { Card } from 'react-native-elements';
 
-const DATA = [
-    {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        title: 'First Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d74',
-        title: 'Third Item',
-    }, {
-        id: '58694a0f-3da1-471f-bd96-145571e29d75',
-        title: 'Third Item',
-    }, {
-        id: '58694a0f-3da1-471f-bd96-145571e29d76',
-        title: 'Third Item',
-    }, {
-        id: '58694a0f-3da1-471f-bd96-145571e29d77',
-        title: 'Third Item',
-    }, {
-        id: '58694a0f-3da1-471f-bd96-145571e29d78',
-        title: 'Third Item',
-    }, {
-        id: '58694a0f-3da1-471f-bd96-145571e29d79',
-        title: 'Third Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d23',
-        title: 'Third Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d24',
-        title: 'Third Item',
-    }, {
-        id: '58694a0f-3da1-471f-bd96-145571e29d25',
-        title: 'Third Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d26',
-        title: 'Third Item',
-    },
-
-];
-
 const renderItem = ({ item }) => (
     <Card>
         <Text style={styles.cardTitleStyle}>
-            {item.title}
+            Nick: {item.Username}
+        </Text>
+        <Text style={styles.cardTitleStyle}>
+            Story: {item.Story}
+        </Text>
+        <Text style={styles.cardTitleStyle}>
+            Like: {item.Like}
         </Text>
     </Card>
 );
-
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             Story: "",
-            textInput: ""
+            textInput: "",
+            list: [],
+            list2:[]
         }
     }
-    componentDidMount() {     
-        if(User.Id)
-            return;
-        const rootRef = firebase.database().ref();
-        const oneRef = rootRef.child('Users').orderByChild('Email');
-        oneRef.equalTo(User.Email)
-            .once('value', snapshot => {
-                const text=snapshot.toJSON()[1];
-                User.Username=text["Username"];
-                User.Id=text["Id"];
-                User.TotalLikes=text["TotalLikes"];
-                User.TotalStories=text["TotalStories"];                
-            })            
+    componentDidMount() {
+        firebase.database().ref('Users/' + User.Id + '/UserLikes/').on('value', (snapshot) => {
+            var li = []
+            snapshot.forEach((child) => {
+                li.push({
+                    Id: child.val().Id
+                })
+                
+            })
+                this.setState({list: li },()=>{this.state.list.forEach(element => {
+                    firebase.database().ref().child('Stories').orderByChild('StoryId').equalTo(element["Id"]).once('value', snapshot => {
+                        var li2 = [];
+                        snapshot.forEach((child) => {
+                            li2.push({
+                                Story: child.val().Story,
+                                Username: child.val().Username,
+                                Like: child.val().Like,
+                                Id: child.val().Id
+                            })
+                        })
+                        this.setState({ list2: li2 })
+                    })
+                })});
+        })
     }
 
     valchange = key => val => {
@@ -94,9 +66,11 @@ export default class HomeScreen extends React.Component {
             storyid = parseInt(snapshot.val(), 10);
         });
         storyid++;
-        firebase.database().ref("Stories/" + storyid).set({ Username: User.Username, Story: this.state.Story, Like: 0, UserId: User.Id })
-        firebase.database().ref("Users/" + userid + "/Stories").set(storyid);
         firebase.database().ref('Total Stories/').set(storyid);
+        firebase.database().ref("Stories/" + storyid).set({ Username: User.Username, Story: this.state.Story, Like: 0, UserId: User.Id, StoryId: storyid });
+        firebase.database().ref("Users/" + User.Id + "/UserStories/" + storyid).set({ Id: storyid });
+        firebase.database().ref("Users/" + User.Id + "/UserLikes/" + storyid).set({ Id: storyid });
+
         this.textInput.clear();
     }
 
@@ -119,9 +93,9 @@ export default class HomeScreen extends React.Component {
                 <ScrollView>
                     <SafeAreaView style={styles.container}>
                         <FlatList
-                            data={DATA}
+                            data={this.state.list2}
                             renderItem={renderItem}
-                            keyExtractor={item => item.id}
+                            keyExtractor={item => item.Id}
 
                         />
                     </SafeAreaView>

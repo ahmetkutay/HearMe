@@ -6,68 +6,56 @@ import { ScrollView } from 'react-native-gesture-handler';
 import User from '../components/User';
 import { Appbar } from 'react-native-paper';
 import { Card } from 'react-native-elements';
-
-const DATA = [
-    {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        title: 'First Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d74',
-        title: 'Third Item',
-    }, {
-        id: '58694a0f-3da1-471f-bd96-145571e29d75',
-        title: 'Third Item',
-    }, {
-        id: '58694a0f-3da1-471f-bd96-145571e29d76',
-        title: 'Third Item',
-    }, {
-        id: '58694a0f-3da1-471f-bd96-145571e29d77',
-        title: 'Third Item',
-    }, {
-        id: '58694a0f-3da1-471f-bd96-145571e29d78',
-        title: 'Third Item',
-    }, {
-        id: '58694a0f-3da1-471f-bd96-145571e29d79',
-        title: 'Third Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d23',
-        title: 'Third Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d24',
-        title: 'Third Item',
-    }, {
-        id: '58694a0f-3da1-471f-bd96-145571e29d25',
-        title: 'Third Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d26',
-        title: 'Third Item',
-    },
-
-];
-
-const Item = ({ title }) => (
-    <View style={styles.item}>
-        <Text style={styles.title}>{title}</Text>
-    </View>
-);
+import * as firebase from 'firebase';
 
 const renderItem = ({ item }) => (
     <Card>
         <Text style={styles.cardTitleStyle}>
-            {item.title}
+            Nick: {item.Username}
+        </Text>
+        <Text style={styles.cardTitleStyle}>
+            Story: {item.Story}
+        </Text>
+        <Text style={styles.cardTitleStyle}>
+            Like: {item.Like}
         </Text>
     </Card>
 );
 
+
 export default class ProfileScreen extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            list: [],
+            list2:[]
+        }
+    }
+    componentDidMount() {
+        firebase.database().ref('Users/' + User.Id + '/UserStories/').on('value', (snapshot) => {
+            var li = []
+            snapshot.forEach((child) => {
+                li.push({
+                    Id: child.val().Id
+                })
+                
+            })
+                this.setState({list: li },()=>{this.state.list.forEach(element => {
+                    firebase.database().ref().child('Stories').orderByChild('StoryId').equalTo(element["Id"]).once('value', snapshot => {
+                        var li2 = [];
+                        snapshot.forEach((child) => {
+                            li2.push({
+                                Story: child.val().Story,
+                                Username: child.val().Username,
+                                Like: child.val().Like,
+                                Id: child.val().Id
+                            })
+                        })
+                        this.setState({ list2: li2 })
+                    })
+                })});
+        })
+    }
     render() {
         return (
             <SafeAreaView>
@@ -93,9 +81,9 @@ export default class ProfileScreen extends React.Component {
                 <ScrollView>
                     <SafeAreaView style={styles.container}>
                         <FlatList
-                            data={DATA}
+                            data={this.state.list2}
                             renderItem={renderItem}
-                            keyExtractor={item => item.id}
+                            keyExtractor={item => item.Id}
 
                         />
                     </SafeAreaView>
