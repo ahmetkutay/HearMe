@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, StatusBar, FlatList } from 'react-native
 import 'react-native-gesture-handler';
 import { SearchBar } from 'react-native-elements';
 import { SafeAreaView } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Card } from 'react-native-elements';
 import User from '../components/User';
 import * as firebase from 'firebase';
@@ -17,8 +17,10 @@ const renderItem = ({ item }) => (
             Story: {item.Story}
         </Text>
         <Text style={styles.cardTitleStyle}>
-            Like: {item.Like}
+            Likes: {item.Like}
         </Text>
+        <TouchableOpacity onPress={() => {firebase.database().ref('Stories/' + item.Id).update({Like: item.Like+1})
+        firebase.database().ref('Users/' + User.Id + '/UserLikes/' + item.Id).set({ Id: item.Id });}}><Text>Like Story</Text></TouchableOpacity>
     </Card>
 );
 
@@ -28,6 +30,10 @@ export default class SearchScreen extends React.Component {
         this.state = {
             list: [],
         }
+    }
+    LikeStory(id, like) {
+        firebase.database().ref('Stories/' + id).set({ Like: like + 1 })
+        firebase.database().ref('Users/' + User.Id + '/UserLikes/' + id).set({ Id: id });
     }
     componentDidMount() {
         firebase.database().ref('Stories/').on('value', (snapshot) => {
@@ -39,7 +45,8 @@ export default class SearchScreen extends React.Component {
                     Story: child.val().Story,
                     Username: child.val().Username,
                     Like: child.val().Like,
-                    Id: child.val().StoryId
+                    Id: child.val().StoryId,
+                    UId:child.val().UserId
                 })
             })
             this.setState({ list: li })

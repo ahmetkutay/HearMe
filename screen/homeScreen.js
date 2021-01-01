@@ -16,8 +16,10 @@ const renderItem = ({ item }) => (
             Story: {item.Story}
         </Text>
         <Text style={styles.cardTitleStyle}>
-            Like: {item.Like}
+            Likes: {item.Like}
         </Text>
+        <TouchableOpacity onPress={() => {firebase.database().ref('Stories/' + item.Id).update({Like: item.Like-1})
+        firebase.database().ref('Users/' + User.Id + '/UserLikes/' + item.Id).remove();}}><Text>Dislike Story</Text></TouchableOpacity>
     </Card>
 );
 
@@ -41,9 +43,11 @@ export default class HomeScreen extends React.Component {
                 
             })
                 this.setState({list: li },()=>{this.state.list.forEach(element => {
-                    firebase.database().ref().child('Stories').orderByChild('StoryId').equalTo(element["Id"]).once('value', snapshot => {
+                    console.log(element["Id"]);
+                    firebase.database().ref().child('Stories').orderByChild('StoryId').equalTo(element["Id"]).on('value', snapshot => {
                         var li2 = [];
                         snapshot.forEach((child) => {
+                            console.log(child.val().Story)
                             li2.push({
                                 Story: child.val().Story,
                                 Username: child.val().Username,
@@ -61,15 +65,19 @@ export default class HomeScreen extends React.Component {
         this.setState({ [key]: val })
     }
     async sendstory() {
+        if(this.state.Story.trim()=="")
+            return;
         var storyid;
         await firebase.database().ref('Total Stories/').once("value", function (snapshot) {
             storyid = parseInt(snapshot.val(), 10);
         });
         storyid++;
         firebase.database().ref('Total Stories/').set(storyid);
-        firebase.database().ref("Stories/" + storyid).set({ Username: User.Username, Story: this.state.Story, Like: 0, UserId: User.Id, StoryId: storyid });
+        firebase.database().ref("Stories/" + storyid).set({ Username: User.Username, Story: this.state.Story, Like: 1, UserId: User.Id, StoryId: storyid });
         firebase.database().ref("Users/" + User.Id + "/UserStories/" + storyid).set({ Id: storyid });
         firebase.database().ref("Users/" + User.Id + "/UserLikes/" + storyid).set({ Id: storyid });
+        User.TotalStories++;
+        firebase.database().ref("Users/" + User.Id + "/TotalStories").update(User.TotalStories);
 
         this.textInput.clear();
     }

@@ -17,7 +17,7 @@ const renderItem = ({ item }) => (
             Story: {item.Story}
         </Text>
         <Text style={styles.cardTitleStyle}>
-            Like: {item.Like}
+            Likes: {item.Like}
         </Text>
     </Card>
 );
@@ -46,7 +46,7 @@ export default class ProfileScreen extends React.Component {
                         snapshot.forEach((child) => {
                             li2.push({
                                 Story: child.val().Story,
-                                Username: child.val().Username,
+                                Username: child.val().Username, //like artıcak
                                 Like: child.val().Like,
                                 Id: child.val().Id
                             })
