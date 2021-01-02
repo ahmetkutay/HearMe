@@ -4,7 +4,18 @@ import { ScrollView } from 'react-native-gesture-handler';
 import * as firebase from 'firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 import User from "../components/User";
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
 const avatar = require('../assets/mobile_login.png');
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 class Login extends Component {
     constructor(props) {
@@ -17,6 +28,40 @@ class Login extends Component {
 
         }
     }
+
+    registerForPushNotificationsAsync = async () => {
+          let token;
+          if (Constants.isDevice) {
+              const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+              let finalStatus = existingStatus;
+              if (existingStatus !== 'granted') {
+                  const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+                  finalStatus = status;
+              }
+              if (finalStatus !== 'granted') {
+                  alert('Failed to get push token for push notification!');
+                  return;
+              }
+              token = (await Notifications.getExpoPushTokenAsync()).data;
+              console.log(token);
+          } else {
+              alert('Must use physical device for Push Notifications');
+          }
+
+          if (Platform.OS === 'android') {
+              Notifications.setNotificationChannelAsync('default', {
+                  name: 'default',
+                  importance: Notifications.AndroidImportance.MAX,
+                  vibrationPattern: [0, 250, 250, 250],
+                  lightColor: '#FF231F7C',
+              });
+          }
+
+          firebase
+              .database()
+              .ref('Users/' + User.Id + '/push_token')
+              .set(token);
+      };
 
     valchange = key => val => {
         this.setState({ [key]: val })
@@ -35,8 +80,8 @@ class Login extends Component {
                 User.Username=text["Username"];
                 User.Id=text["Id"];
                 User.TotalLikes=text["TotalLikes"];
-                User.TotalStories=text["TotalStories"];                
-            }) 
+                User.TotalStories=text["TotalStories"];
+            })
         this.props.navigation.navigate("Home");
     }
 
@@ -61,6 +106,9 @@ class Login extends Component {
             firebase.database().ref("Users/" + userid).set({ Username: this.state.Username, Email: this.state.Email, Password: this.state.Password, TotalLikes: 0, TotalStories: 0,Id:userid });
             User.Id=userid;
             firebase.database().ref('Total Users/').set(userid);
+
+            await this.registerForPushNotificationsAsync();
+
             this.props.navigation.navigate("Home");
         }
 

@@ -41,7 +41,7 @@ export default class HomeScreen extends React.Component {
                 li.push({
                     Id: child.val().Id
                 })
-                
+
             })
             var li2 = [];
                 this.setState({list: li },()=>{this.state.list.forEach(element => {

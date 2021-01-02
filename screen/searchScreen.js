@@ -6,6 +6,8 @@ import { SafeAreaView } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Card } from 'react-native-elements';
 import User from '../components/User';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 import * as firebase from 'firebase';
 
 const renderItem = ({ item }) => {
@@ -20,8 +22,7 @@ const renderItem = ({ item }) => {
             <Text style={styles.cardTitleStyle}>
                 Likes: {item.Like}
             </Text>
-            <TouchableOpacity disabled={item.disabled == undefined ? false : true} onPress={() => {
-                item.disabled = true;
+            <TouchableOpacity onPress={() => {
                 var isliked = false;
                 firebase.database().ref('Users/' + User.Id + '/UserLikes/').on('value', (snapshot) => {
                     snapshot.forEach((child) => {
@@ -30,16 +31,35 @@ const renderItem = ({ item }) => {
                         }
                     })
                 })
-
                 if (!isliked) {
                     firebase.database().ref('Stories/' + item.Id).update({ Like: item.Like + 1 })
                     firebase.database().ref('Users/' + User.Id + '/UserLikes/' + item.Id).set({ Id: item.Id });
+                    firebase.database().ref('Users/'+item.UId+'/push_token/').once("value", function (snapshot) {
+                       let response = fetch('https://exp.host/--/api/v2/push/send', {
+                           method: 'POST',
+                           headers: {
+                             Accept: 'application/json',
+                             'Content-Type': 'application/json'
+                           },
+                           body: JSON.stringify({
+                             to: snapshot.val(),
+                             sound: 'default',
+                             title: 'Liked',
+                             body: 'Someone Liked Your Story!',
+                           })
+                         });
+
+                    }
+                    );
                 }
             }
             }><Text>Like Story</Text></TouchableOpacity>
         </Card>
     )
 };
+
+
+
 
 export default class SearchScreen extends React.Component {
     constructor(props) {
@@ -49,11 +69,9 @@ export default class SearchScreen extends React.Component {
             list2: []
         }
     }
-    LikeStory(id, like) {
-        firebase.database().ref('Stories/' + id).set({ Like: like + 1 })
-        firebase.database().ref('Users/' + User.Id + '/UserLikes/' + id).set({ Id: id });
-    }
-    componentDidMount() {
+
+      componentDidMount() {
+
         firebase.database().ref('Users/' + User.Id + '/UserLikes/').on('value', (snapshot) => {
             var li = []
             snapshot.forEach((child) => {

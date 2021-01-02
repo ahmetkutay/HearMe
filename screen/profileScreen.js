@@ -41,19 +41,19 @@ export default class ProfileScreen extends React.Component {
                 li.push({
                     Id: child.val().Id
                 })
-                
+
             })
             var li2 = [];
             User.TotalLikes=0;
                 this.setState({list: li },()=>{this.state.list.forEach(element => {
                     firebase.database().ref().child('Stories').orderByChild('StoryId').equalTo(element["Id"]).once('value', snapshot => {
-                       
+
                         snapshot.forEach((child) => {
                             User.TotalLikes+=child.val().Like;
                             li2.push({
                                 Story: child.val().Story,
                                 Username: child.val().Username, //like artıcak
-                                Like: child.val().Like,                                
+                                Like: child.val().Like,
                                 Id: element["Id"]
                             })
                         })
