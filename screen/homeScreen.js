@@ -30,7 +30,8 @@ export default class HomeScreen extends React.Component {
             Story: "",
             textInput: "",
             list: [],
-            list2:[]
+            list2:[],
+            open:true
         }
     }
     componentDidMount() {
@@ -42,17 +43,15 @@ export default class HomeScreen extends React.Component {
                 })
                 
             })
+            var li2 = [];
                 this.setState({list: li },()=>{this.state.list.forEach(element => {
-                    console.log(element["Id"]);
                     firebase.database().ref().child('Stories').orderByChild('StoryId').equalTo(element["Id"]).on('value', snapshot => {
-                        var li2 = [];
                         snapshot.forEach((child) => {
-                            console.log(child.val().Story)
                             li2.push({
                                 Story: child.val().Story,
                                 Username: child.val().Username,
                                 Like: child.val().Like,
-                                Id: child.val().Id
+                                Id: element["Id"]
                             })
                         })
                         this.setState({ list2: li2 })
@@ -77,7 +76,7 @@ export default class HomeScreen extends React.Component {
         firebase.database().ref("Users/" + User.Id + "/UserStories/" + storyid).set({ Id: storyid });
         firebase.database().ref("Users/" + User.Id + "/UserLikes/" + storyid).set({ Id: storyid });
         User.TotalStories++;
-        firebase.database().ref("Users/" + User.Id + "/TotalStories").update(User.TotalStories);
+        firebase.database().ref("Users/" + User.Id + "/TotalStories").set(User.TotalStories);
 
         this.textInput.clear();
     }

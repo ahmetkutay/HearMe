@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, StatusBar, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, StatusBar, FlatList,TouchableOpacity } from 'react-native';
 import 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -19,6 +19,9 @@ const renderItem = ({ item }) => (
         <Text style={styles.cardTitleStyle}>
             Likes: {item.Like}
         </Text>
+        <TouchableOpacity onPress={() => { firebase.database().ref('Stories/' + item.Id).remove();
+        firebase.database().ref('Users/' + User.Id + '/UserStories/' + item.Id).remove();User.TotalStories--;
+        firebase.database().ref("Users/" + User.Id + "/TotalStories").set(User.TotalStories);}}><Text>Delete Story</Text></TouchableOpacity>
     </Card>
 );
 
@@ -40,18 +43,21 @@ export default class ProfileScreen extends React.Component {
                 })
                 
             })
+            var li2 = [];
+            User.TotalLikes=0;
                 this.setState({list: li },()=>{this.state.list.forEach(element => {
                     firebase.database().ref().child('Stories').orderByChild('StoryId').equalTo(element["Id"]).once('value', snapshot => {
-                        var li2 = [];
+                       
                         snapshot.forEach((child) => {
+                            User.TotalLikes+=child.val().Like;
                             li2.push({
                                 Story: child.val().Story,
                                 Username: child.val().Username, //like artıcak
-                                Like: child.val().Like,
-                                Id: child.val().Id
+                                Like: child.val().Like,                                
+                                Id: element["Id"]
                             })
                         })
-                        this.setState({ list2: li2 })
+                        this.setState({ list2: li2},()=>{firebase.database().ref("Users/" + User.Id + "/TotalLikes").set(User.TotalLikes);} )
                     })
                 })});
         })
@@ -69,7 +75,13 @@ export default class ProfileScreen extends React.Component {
                 <ScrollView>
                     <View style={{ alignSelf: 'center' }}>
                         <View>
-                            <Text style={{ alignSelf: "center" }}>{User.Username}</Text>
+                            <Text style={{ alignSelf: "center" }}>Nick: {User.Username}</Text>
+                        </View>
+                        <View>
+                            <Text style={{ alignSelf: "center" }}>Total Stories: {User.TotalStories}</Text>
+                        </View>
+                        <View>
+                            <Text style={{ alignSelf: "center" }}>Total Likes: {User.TotalLikes}</Text>
                         </View>
                     </View>
                     <View style={{ height: 20 }} />

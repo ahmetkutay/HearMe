@@ -50,6 +50,7 @@ class Login extends Component {
             User.Email = email;
             User.Password = password;
             User.Username = username;
+            User.TotalStories=0;
             firebase.auth().createUserWithEmailAndPassword(email, password).catch(error => {
                 this.props.navigation.navigate("Login");
             });
