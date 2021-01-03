@@ -45,7 +45,7 @@ const renderItem = ({ item }) => {
                                 to: snapshot.val(),
                                 sound: 'default',
                                 title: 'Liked',
-                                body: 'Someone Liked Your Story!',
+                                body: User.Username+' Liked Your Story!',
                             })
                         });
 
@@ -71,7 +71,7 @@ export default class SearchScreen extends React.Component {
     }
 
     componentDidMount() {
-
+        this.forceUpdate();
         firebase.database().ref('Users/' + User.Id + '/UserLikes/').on('value', (snapshot) => {
             var li = []
             snapshot.forEach((child) => {

@@ -71,6 +71,7 @@ export default class ProfileScreen extends React.Component {
         }
     }
     componentDidMount() {
+        this.forceUpdate();
         firebase.database().ref('Users/' + User.Id + '/UserStories/').on('value', (snapshot) => {
             var li = []
             snapshot.forEach((child) => {

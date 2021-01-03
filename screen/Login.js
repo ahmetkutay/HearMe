@@ -76,11 +76,13 @@ class Login extends Component {
         const oneRef = rootRef.child('Users').orderByChild('Email');
         oneRef.equalTo(User.Email)
             .once('value', snapshot => {
-                const text = snapshot.toJSON()[1];
-                User.Username = text["Username"];
-                User.Id = text["Id"];
-                User.TotalLikes = text["TotalLikes"];
-                User.TotalStories = text["TotalStories"];
+                snapshot.forEach((child) => {
+                    const text=child.toJSON();             
+                    User.Username = text["Username"];
+                    User.Id = text["Id"];
+                    User.TotalLikes = text["TotalLikes"];
+                    User.TotalStories = text["TotalStories"];
+                })                
             })
         this.props.navigation.navigate("Home");
     }
