@@ -19,9 +19,11 @@ const renderItem = ({ item }) => (
             Likes: {item.Like}
         </Text>
         <TouchableOpacity onPress={() => {firebase.database().ref('Stories/' + item.Id).update({Like: item.Like-1})
-        firebase.database().ref('Users/' + User.Id + '/UserLikes/' + item.Id).remove();}}><Text>Dislike Story</Text></TouchableOpacity>
+        firebase.database().ref('Users/' + User.Id + '/UserLikes/' + item.Id).remove();
+      }}><Text>Dislike Story</Text></TouchableOpacity>
     </Card>
 );
+
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -34,17 +36,20 @@ export default class HomeScreen extends React.Component {
             open:true
         }
     }
+
+
+
     componentDidMount() {
-        this.forceUpdate();
         firebase.database().ref('Users/' + User.Id + '/UserLikes/').on('value', (snapshot) => {
-            var li = []
+          var li = [];
+          this.setState({list: [] ,list2:[] });
+          var li2 = [];
             snapshot.forEach((child) => {
                 li.push({
                     Id: child.val().Id
                 })
 
             })
-            var li2 = [];
                 this.setState({list: li },()=>{this.state.list.forEach(element => {
                     firebase.database().ref().child('Stories').orderByChild('StoryId').equalTo(element["Id"]).on('value', snapshot => {
                         snapshot.forEach((child) => {
@@ -59,6 +64,7 @@ export default class HomeScreen extends React.Component {
                     })
                 })});
         })
+
     }
 
     valchange = key => val => {

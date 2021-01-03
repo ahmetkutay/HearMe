@@ -71,16 +71,17 @@ export default class ProfileScreen extends React.Component {
         }
     }
     componentDidMount() {
-        this.forceUpdate();
         firebase.database().ref('Users/' + User.Id + '/UserStories/').on('value', (snapshot) => {
-            var li = []
+          var li = [];
+          this.setState({list: [] ,list2:[] });
+          var li2 = [];
             snapshot.forEach((child) => {
                 li.push({
                     Id: child.val().Id
                 })
 
             })
-            var li2 = [];
+
             User.TotalLikes = 0;
             this.setState({ list: li }, () => {
                 this.state.list.forEach(element => {
