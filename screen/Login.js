@@ -10,11 +10,11 @@ import * as Permissions from 'expo-permissions';
 const avatar = require('../assets/mobile_login.png');
 
 Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+    }),
 });
 
 class Login extends Component {
@@ -30,38 +30,38 @@ class Login extends Component {
     }
 
     registerForPushNotificationsAsync = async () => {
-          let token;
-          if (Constants.isDevice) {
-              const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-              let finalStatus = existingStatus;
-              if (existingStatus !== 'granted') {
-                  const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-                  finalStatus = status;
-              }
-              if (finalStatus !== 'granted') {
-                  alert('Failed to get push token for push notification!');
-                  return;
-              }
-              token = (await Notifications.getExpoPushTokenAsync()).data;
-              console.log(token);
-          } else {
-              alert('Must use physical device for Push Notifications');
-          }
+        let token;
+        if (Constants.isDevice) {
+            const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+            let finalStatus = existingStatus;
+            if (existingStatus !== 'granted') {
+                const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+                finalStatus = status;
+            }
+            if (finalStatus !== 'granted') {
+                alert('Failed to get push token for push notification!');
+                return;
+            }
+            token = (await Notifications.getExpoPushTokenAsync()).data;
+            console.log(token);
+        } else {
+            alert('Must use physical device for Push Notifications');
+        }
 
-          if (Platform.OS === 'android') {
-              Notifications.setNotificationChannelAsync('default', {
-                  name: 'default',
-                  importance: Notifications.AndroidImportance.MAX,
-                  vibrationPattern: [0, 250, 250, 250],
-                  lightColor: '#FF231F7C',
-              });
-          }
+        if (Platform.OS === 'android') {
+            Notifications.setNotificationChannelAsync('default', {
+                name: 'default',
+                importance: Notifications.AndroidImportance.MAX,
+                vibrationPattern: [0, 250, 250, 250],
+                lightColor: '#FF231F7C',
+            });
+        }
 
-          firebase
-              .database()
-              .ref('Users/' + User.Id + '/push_token')
-              .set(token);
-      };
+        firebase
+            .database()
+            .ref('Users/' + User.Id + '/push_token')
+            .set(token);
+    };
 
     valchange = key => val => {
         this.setState({ [key]: val })
@@ -76,11 +76,11 @@ class Login extends Component {
         const oneRef = rootRef.child('Users').orderByChild('Email');
         oneRef.equalTo(User.Email)
             .once('value', snapshot => {
-                const text=snapshot.toJSON()[1];
-                User.Username=text["Username"];
-                User.Id=text["Id"];
-                User.TotalLikes=text["TotalLikes"];
-                User.TotalStories=text["TotalStories"];
+                const text = snapshot.toJSON()[1];
+                User.Username = text["Username"];
+                User.Id = text["Id"];
+                User.TotalLikes = text["TotalLikes"];
+                User.TotalStories = text["TotalStories"];
             })
         this.props.navigation.navigate("Home");
     }
@@ -95,16 +95,16 @@ class Login extends Component {
             User.Email = email;
             User.Password = password;
             User.Username = username;
-            User.TotalStories=0;
+            User.TotalStories = 0;
             firebase.auth().createUserWithEmailAndPassword(email, password).catch(error => {
                 this.props.navigation.navigate("Login");
             });
             await firebase.database().ref('Total Users/').once("value", function (snapshot) {
-                userid = parseInt(snapshot.val(),10);
+                userid = parseInt(snapshot.val(), 10);
             });
             userid++;
-            firebase.database().ref("Users/" + userid).set({ Username: this.state.Username, Email: this.state.Email, Password: this.state.Password, TotalLikes: 0, TotalStories: 0,Id:userid });
-            User.Id=userid;
+            firebase.database().ref("Users/" + userid).set({ Username: this.state.Username, Email: this.state.Email, Password: this.state.Password, TotalLikes: 0, TotalStories: 0, Id: userid });
+            User.Id = userid;
             firebase.database().ref('Total Users/').set(userid);
 
             await this.registerForPushNotificationsAsync();
@@ -116,7 +116,7 @@ class Login extends Component {
     }
     render() {
         return (
-            <SafeAreaView style={{ backgroundColor: 'white' }}>
+            <SafeAreaView style={{ backgroundColor: 'white', flex: 1, justifyContent: 'center' }}>
                 <View style={{ alignSelf: 'center' }}>
                     <View style={styles.profilImage}>
                         <Image source={avatar} style={styles.image} resizeMode="cover" ></Image>
@@ -141,7 +141,7 @@ class Login extends Component {
                     <View style={{ height: 5 }} />
 
                     <View style={styles.inputView}>
-                        <TextInput style={styles.inputText} placeholder=" Şifrenizi Yazınız" value={this.state.Password} onChangeText={this.valchange("Password")} />
+                        <TextInput secureTextEntry={true} style={styles.inputText} placeholder=" Şifrenizi Yazınız" value={this.state.Password} onChangeText={this.valchange("Password")} />
                     </View>
                     <View style={{ height: 5 }} />
 

@@ -34,20 +34,20 @@ const renderItem = ({ item }) => {
                 if (!isliked) {
                     firebase.database().ref('Stories/' + item.Id).update({ Like: item.Like + 1 })
                     firebase.database().ref('Users/' + User.Id + '/UserLikes/' + item.Id).set({ Id: item.Id });
-                    firebase.database().ref('Users/'+item.UId+'/push_token/').once("value", function (snapshot) {
-                       let response = fetch('https://exp.host/--/api/v2/push/send', {
-                           method: 'POST',
-                           headers: {
-                             Accept: 'application/json',
-                             'Content-Type': 'application/json'
-                           },
-                           body: JSON.stringify({
-                             to: snapshot.val(),
-                             sound: 'default',
-                             title: 'Liked',
-                             body: 'Someone Liked Your Story!',
-                           })
-                         });
+                    firebase.database().ref('Users/' + item.UId + '/push_token/').once("value", function (snapshot) {
+                        let response = fetch('https://exp.host/--/api/v2/push/send', {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                to: snapshot.val(),
+                                sound: 'default',
+                                title: 'Liked',
+                                body: 'Someone Liked Your Story!',
+                            })
+                        });
 
                     }
                     );
@@ -70,7 +70,7 @@ export default class SearchScreen extends React.Component {
         }
     }
 
-      componentDidMount() {
+    componentDidMount() {
 
         firebase.database().ref('Users/' + User.Id + '/UserLikes/').on('value', (snapshot) => {
             var li = []
