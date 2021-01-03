@@ -77,12 +77,12 @@ class Login extends Component {
         oneRef.equalTo(User.Email)
             .once('value', snapshot => {
                 snapshot.forEach((child) => {
-                    const text=child.toJSON();             
+                    const text=child.toJSON();
                     User.Username = text["Username"];
                     User.Id = text["Id"];
                     User.TotalLikes = text["TotalLikes"];
                     User.TotalStories = text["TotalStories"];
-                })                
+                })
             })
         this.props.navigation.navigate("Home");
     }
